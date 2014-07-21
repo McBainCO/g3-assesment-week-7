@@ -12,18 +12,21 @@ class Application < Sinatra::Application
   def initialize
     super
     @database_connection = GschoolDatabaseConnection::DatabaseConnection.establish(ENV['RACK_ENV'])
+    @messages_table = MessagesTable.new(GschoolDatabaseConnection::DatabaseConnection.establish(ENV['RACK_ENV']))
   end
 
   get '/' do
     erb :index
+
   end
 
   post '/' do
     name = params[:name]
     message = params[:message]
     flash[:message] = "Message from #{name} : #{message}"
+    @messages_table.message_and_name(name, message)
+    flash[:all] = @messages_table.retreive_name_and_message
     redirect '/'
-
   end
 
   get '/continents' do

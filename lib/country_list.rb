@@ -21,7 +21,11 @@ class CountryList
   end
 
   def countries_for_continent(continent)
-    all
+    all.map {|country|
+    if country[:continent] == "#{continent}"
+      country[:name]
+    end
+    }
   end
 
 end
