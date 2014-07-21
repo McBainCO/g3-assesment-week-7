@@ -2,8 +2,12 @@ require 'sinatra/base'
 require 'gschool_database_connection'
 
 require './lib/country_list'
+require 'rack-flash'
+
 
 class Application < Sinatra::Application
+  enable :sessions
+  use Rack::Flash
 
   def initialize
     super
@@ -12,6 +16,14 @@ class Application < Sinatra::Application
 
   get '/' do
     erb :index
+  end
+
+  post '/' do
+    name = params[:name]
+    message = params[:message]
+    flash[:message] = "Message from #{name} : #{message}"
+    redirect '/'
+
   end
 
   get '/continents' do
